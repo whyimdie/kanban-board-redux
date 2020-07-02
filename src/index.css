@@ -1,8 +1,11 @@
+html,body{
+  width:100%;
+  height:100%;
+}
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  padding: 0;
+  font-family: sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -10,4 +13,103 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* layout */
+.main-content{
+  background-color:#f2f2f2;
+  width:100%;
+  height:100%;
+  padding-top:20px;
+}
+
+hr {
+  margin: 0;
+}
+.full-width-input {
+  display:block;
+  width:100%;
+  margin-bottom:10px;
+}
+input {
+  border: 1px solid #E0E0E0;
+  border-radius:3px;
+  padding:15px;
+  box-sizing: border-box;
+}
+.button {
+  padding: 10px;
+  background: #76dc76;
+  color: #fff;
+  border: 1px solid transparent;
+  border-Radius: 6px;
+  font: inherit;
+  cursor:pointer;
+}
+.button-default{
+  background:#cacaca;
+  color:black;
+}
+
+/* TaskList */
+.new-task-form{
+  margin-bottom:10px;
+}
+.tasks {
+  margin: 0 auto;
+  max-width:980px;
+}
+
+.tasks-header{
+  font-size:18px;
+  margin-bottom:20x;
+  text-align:right;
+}
+
+/* Task */
+.task {
+  margin-bottom:15px;
+  background: #fff;
+  box-shadow: 0 -1px 0 #e0e0e0, 0 0 2px rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.24);
+}
+.task-header{
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items:center;
+}
+.task-body{
+  padding: 10px 20px;
+  min-height:60px;
+}
+.task-lists{
+  display:flex;
+  justify-content:space-between;
+}
+
+.task-list{
+  width:300px;
+}
+
+.task-list-title{
+  margin-bottom:10px;
+}
+
+.tasks-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height:100vh;
+}
+
+.flash-error {
+  text-align: center;
+  padding: 25px;
+  background: #f2dede;
+  border-color: #ebcccc;
+  color: #a94442;
+}
+
+.container {
+  height: 100%;
 }

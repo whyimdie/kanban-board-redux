@@ -1,0 +1,40 @@
+{
+  "tasks": [
+    {
+      "id": 1,
+      "title": "Learn Redux",
+      "description": "The store, actions, and reducers, oh my!",
+      "status": "In Progress"
+    },
+    {
+      "id": 2,
+      "title": "Peacce on Earth",
+      "description": "No big deal",
+      "status": "Completed"
+    },
+    {
+      "id": 3,
+      "title": "Earth",
+      "description": "No big deal",
+      "status": "Completed"
+    },
+    {
+      "id": 4,
+      "title": "Learn Redux",
+      "description": "The store, actions, and reducers, oh my!",
+      "status": "In Progress"
+    },
+    {
+      "title": "C",
+      "description": "C",
+      "status": "Completed",
+      "id": 5
+    },
+    {
+      "title": "A",
+      "description": "B",
+      "status": "Unstarted",
+      "id": 6
+    }
+  ]
+}
