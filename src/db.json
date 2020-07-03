@@ -4,7 +4,7 @@
       "id": 1,
       "title": "Learn Redux",
       "description": "The store, actions, and reducers, oh my!",
-      "status": "In Progress"
+      "status": "Unstarted"
     },
     {
       "id": 2,
@@ -22,7 +22,7 @@
       "id": 4,
       "title": "Learn Redux",
       "description": "The store, actions, and reducers, oh my!",
-      "status": "In Progress"
+      "status": "Unstarted"
     },
     {
       "title": "C",
@@ -33,8 +33,32 @@
     {
       "title": "A",
       "description": "B",
-      "status": "Unstarted",
+      "status": "Completed",
       "id": 6
+    },
+    {
+      "title": "Ăn gì chưa",
+      "description": "Chưa nha",
+      "status": "Unstarted",
+      "id": 7
+    },
+    {
+      "title": "THis is new",
+      "description": "Tasks",
+      "status": "Unstarted",
+      "id": 8
+    },
+    {
+      "title": "This is final one",
+      "description": "Hope it work",
+      "status": "Unstarted",
+      "id": 9
+    },
+    {
+      "title": "FInal nhé",
+      "description": "Finallllll",
+      "status": "Completed",
+      "id": 10
     }
   ]
 }

@@ -49,6 +49,7 @@
 const initialState = {
   tasks: [],
   isLoading: false,
+  error: null,
 }
 
 // Convert the above function into switch condition
@@ -71,6 +72,7 @@ export default function tasks(state=initialState,action){
     case 'FETCH_TASKS_STARTED': {
       return {
         ...state,
+        tasks: action.payload,
         isLoading:true,
       };
     }
@@ -78,13 +80,13 @@ export default function tasks(state=initialState,action){
       return {
         ...state,
         isLoading: false,
-        tasks: action.payload.tasks
+        tasks: action.payload,
       };
     }
     case 'CREATE_TASK_SUCCEEDED':{
       return {
         ...state,
-        tasks: state.tasks.concat(action.payload.task)
+        tasks: state.tasks.concat(action.payload)
       };
     }
     case 'EDIT_TASK_SUCCEEDED':{
