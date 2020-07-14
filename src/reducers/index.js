@@ -50,15 +50,113 @@ import { TASK_STATUSES } from '../constants';
 //     return state;
 // }
 
-const initialState = {
+const initialTasksState = {
   tasks: [],
   isLoading: false,
   error: null,
   searchTerm: ''
 }
 
+const initialProjectsState = {
+  items: [],
+  isLoading: false,
+  error: null
+};
+
+const initialPageState = {
+  currentProjectId: null,
+  searchTerm: '',
+}
+
+export function page(state=initialPageState,action){
+  switch(action.type){
+    case 'SET_CURRENT_PROJECT_ID':{
+      return {
+        ...state,
+        currentProjectId: action.payload.id,
+      };
+    }
+    case 'FILTER_TASKS':{
+      return {
+        ...state,
+        searchTerm: action.searchTerm
+      };
+    }
+    default: {
+      return state;
+    }
+  }
+}
+export function projects(state=initialProjectsState,action){
+  switch(action.type){
+    case 'FETCH_PROJECTS_STARTED':{
+      return {
+        ...state,
+        isLoading:true,
+      };
+    }
+    case 'FETCH_PROJECTS_SUCCEEDED':{
+      return {
+        ...state,
+        isLoading:false,
+        items: action.payload.projects,
+      }
+    }
+    case 'FETCH_PROJECTS_FAILED':{
+      return{
+        ...state,
+        error: action.payload.err
+      }
+    }
+    case 'CREATE_TASK_SUCCEEDED':{
+      const {task} = action.payload;
+      const projectIndex = state.items.findIndex(
+        project=>project.id===task.projectId,
+      );
+      const project = state.items[projectIndex];
+      const nextProject = {
+        ...project,
+        tasks:project.tasks.concat(task)
+      };
+      return {
+        ...state,
+        items:[
+          ...state.items.slice(0,projectIndex),
+          nextProject,
+          ...state.items.slice(projectIndex+1),
+        ],
+      }
+    }
+    case 'EDIT_TASK_SUCCEEDED': {
+      const {task} = action.payload;
+      const projectIndex = state.items.findIndex(
+        project => project.id === task.projectId,
+      );
+      const project = state.items[projectIndex];
+      const taskIndex = project.tasks.findIndex(t=>t.id===task.id);
+      const nextProject = {
+        ...project,
+        tasks:[
+          ...project.tasks.slice(0,taskIndex),
+          task,
+          ...project.tasks.slice(taskIndex+1),
+        ],
+      };
+      return {
+        ...state,
+        items:[
+          ...state.items.slice(0,projectIndex),
+          nextProject,
+          ...state.items.slice(projectIndex+1)
+        ],
+      };
+    }
+    default: return state;
+  }
+}
+
 // Convert the above function into switch condition
-export default function tasks(state=initialState,action){
+export function tasks(state=initialTasksState,action){
   switch (action.type) {
     // case 'CREATE_TASK':{
     //   return {tasks: state.tasks.concat(action.payload)}
@@ -93,12 +191,12 @@ export default function tasks(state=initialState,action){
         tasks: action.payload.tasks
       };
     }
-    case 'CREATE_TASK_SUCCEEDED':{
-      return {
-        ...state,
-        tasks: state.tasks.concat(action.payload.task)
-      };
-    }
+    // case 'CREATE_TASK_SUCCEEDED':{
+    //   return {
+    //     ...state,
+    //     tasks: state.tasks.concat(action.payload.task)
+    //   };
+    // }
     case 'EDIT_TASK_SUCCEEDED':{
       const {payload} = action;
       const nextTasks = state.tasks.map(task=>{
@@ -140,11 +238,22 @@ export default function tasks(state=initialState,action){
 //   });
 // }
 
-const getTasks = state => state.tasks.tasks;
-const getSearchTerm = state => state.tasks.searchTerm;
+// const getTasks = state => state.tasks.tasks;
+// const getSearchTerm = state => state.tasks.searchTerm;
+const getSearchTerm = state => state.page.tasksSearchTerm;
+const getTasksByProjectId = state => {
+  if (!state.page.currentProjectId){
+    return [];
+  }
+  const currentProject = state.projects.items.find(
+    project => project.id === state.page.currentProjectId,
+  );
+  return currentProject.tasks
+};
 
 export const getFilteredTasks = createSelector(
-  [getTasks,getSearchTerm],
+  // [getTasks,getSearchTerm],
+  [getTasksByProjectId,getSearchTerm],
   (tasks,searchTerm) => {
     return tasks.filter(task=> task.title.match(new RegExp(searchTerm,'i')));
   },

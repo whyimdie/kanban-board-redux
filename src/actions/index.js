@@ -52,6 +52,37 @@ export function filterTasks(searchTerm){
 export function fetchTasks(){
     return {type: 'FETCH_TASKS_STARTED'}
 }
+
+export function fetchProjects(){
+    return (dispatch,getState)=>{
+        dispatch(fetchProjectsStarted())
+        return api.fetchProjects().then((res)=>{
+            const projects = res.data;
+            dispatch(fetchProjectsSucceeded(projects));
+        }).catch((err)=>{
+            console.log(err);
+            fetchProjectsFailed(err);
+        })
+    }
+}
+function fetchProjectsStarted(boards){
+    return {type:'FETCH_PROJECTS_STARTED',payload:{boards}};
+}
+function fetchProjectsSucceeded(projects){
+    return {type:'FETCH_PROJECTS_SUCCEEDED',payload:{projects}};
+}
+function fetchProjectsFailed(err){
+    return {type:'FETCH_PROJECTS_FAILED',payload:err};
+}
+
+export function setCurrentProjectId(id){
+    return {
+        type:'SET_CURRENT_PROJECT_ID',
+        payload: {
+            id,
+        }
+    };
+}
 // export function fetchTasks(){
 //     return dispatch =>{
 //         dispatch(fetchTasksStarted());

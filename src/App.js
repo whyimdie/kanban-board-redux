@@ -2,9 +2,12 @@ import React,{Component} from 'react';
 import {connect} from 'react-redux';
 import TaskPage from './components/TaskPage';
 import FlashMessage from './components/FlashMessage';
-import {createTask,editTask,fetchTasks,filterTasks} from './actions';
+import {createTask,editTask,filterTasks,fetchProjects,setCurrentProjectId} from './actions';
+
+// import {fetchTasks} from './actions';
 // import {getFilteredTasks} from './reducers';
 import {getGroupedAndFilteredTasks} from './reducers';
+import Header from './components/Header';
 
 
 // import {createStore} from 'redux';
@@ -25,8 +28,13 @@ import {getGroupedAndFilteredTasks} from './reducers';
 class App extends Component {
   // WHen the componentDidMount, fetchs the data from database
   componentDidMount(){
-    this.props.dispatch(fetchTasks());
+    // this.props.dispatch(fetchTasks());
+    this.props.dispatch(fetchProjects());
   }
+
+  onCurrentProjectChange = e => {
+    this.props.dispatch(setCurrentProjectId(Number(e.target.value)));
+  };
 
   onSearch = searchTerm => {
     this.props.dispatch(filterTasks(searchTerm));
@@ -43,13 +51,17 @@ class App extends Component {
       <div className="container">
         {this.props.error && <FlashMessage message={this.props.error}/>}
         <div className="main-content">
-        <TaskPage 
-          tasks={this.props.tasks}
-          onCreateTask={this.onCreateTask}
-          onSearch={this.onSearch}
-          onStatusChange={this.onStatusChange}
-          isLoading={this.props.isLoading}
-        />
+          <Header
+            projects={this.props.projects}
+            onCurrentProjectChange={this.onCurrentProjectChange}
+          />
+          <TaskPage 
+            tasks={this.props.tasks}
+            onCreateTask={this.onCreateTask}
+            onSearch={this.onSearch}
+            onStatusChange={this.onStatusChange}
+            isLoading={this.props.isLoading}
+          />
       </div>
       </div>
       
@@ -57,26 +69,35 @@ class App extends Component {
   }
 }
 
+// function mapStateToProps(state){
+//   // return {
+//   //   tasks: state.tasks
+//   // }
+//   // const {tasks,isLoading,error} = state.tasks;
+//   // return {tasks,isLoading,error};
+
+//   // const {isLoading,error,searchTerm} = state.tasks;
+//   // const tasks = state.tasks.tasks.filter(task=>{
+//   //   return task.title.match(new RegExp(searchTerm,'i'));
+//   // });
+//   // return {tasks,isLoading,error};
+
+//   // const {tasks, isLoading, error, searchTerm} = state.tasks;
+//   // return {tasks:getFilteredTasks(tasks,searchTerm),isLoading,error};
+
+//   const {isLoading, error} = state.tasks;
+//   // return {tasks:getFilteredTasks(state),isLoading,error};
+//   return {tasks:getGroupedAndFilteredTasks(state),isLoading,error};
+// }
+
 function mapStateToProps(state){
-  // return {
-  //   tasks: state.tasks
-  // }
-  // const {tasks,isLoading,error} = state.tasks;
-  // return {tasks,isLoading,error};
-
-  // const {isLoading,error,searchTerm} = state.tasks;
-  // const tasks = state.tasks.tasks.filter(task=>{
-  //   return task.title.match(new RegExp(searchTerm,'i'));
-  // });
-  // return {tasks,isLoading,error};
-
-  // const {tasks, isLoading, error, searchTerm} = state.tasks;
-  // return {tasks:getFilteredTasks(tasks,searchTerm),isLoading,error};
-
-  const {isLoading, error} = state.tasks;
-  // return {tasks:getFilteredTasks(state),isLoading,error};
-  return {tasks:getGroupedAndFilteredTasks(state),isLoading,error};
+  const {isLoading,error,items} = state.projects;
+  return {
+    tasks: getGroupedAndFilteredTasks(state),
+    projects: items,
+    isLoading,
+    error,
+  }
 }
-
 // export default App;
 export default connect(mapStateToProps)(App);

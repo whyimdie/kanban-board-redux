@@ -7,15 +7,20 @@ import {createStore,applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
 // import tasks from './reducers';
 
+import {projects,tasks,page} from './reducers';
+
 import createSagaMiddleware from 'redux-saga';
 import rootSaga from './sagas';
 
 import {composeWithDevTools} from 'redux-devtools-extension';
 
-import tasksReducer from './reducers';
+// import tasksReducer from './reducers';
 const rootReducer = (state={},action)=>{
   return {
-    tasks: tasksReducer(state.tasks,action),
+    // tasks: tasksReducer(state.tasks,action),
+    projects: projects(state.projects,action),
+    tasks: tasks(state.tasks,action),
+    page: page(state.page,action),
   };
 };
 
