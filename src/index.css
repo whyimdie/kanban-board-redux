@@ -64,6 +64,8 @@ input {
   font-size:18px;
   margin-bottom:20x;
   text-align:right;
+  display: flex;
+  justify-content: space-between;
 }
 
 /* Task */
@@ -77,6 +79,7 @@ input {
   display: flex;
   justify-content: space-between;
   align-items:center;
+  
 }
 .task-body{
   padding: 10px 20px;
@@ -112,4 +115,9 @@ input {
 
 .container {
   height: 100%;
+}
+
+.task-timer {
+  text-align: right;
+  font-weight: bold;
 }

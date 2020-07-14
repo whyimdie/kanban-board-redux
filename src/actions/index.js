@@ -45,25 +45,32 @@ export function fetchTasksSucceeded(tasks) {
 //     };
 // }
 
-export function fetchTasks(){
-    return dispatch =>{
-        dispatch(fetchTasksStarted());
-
-        // api.fetchTasks().then(res=>{
-        //     dispatch(fetchTasksSucceeded(res.data));
-        // });
-
-        api.fetchTasks().then(res=>{
-            setTimeout(()=>{
-                dispatch(fetchTasksSucceeded(res.data));
-            },2000);
-            // throw new Error('Oh noes! Unable to fetch tasks!');
-        // });
-        }).catch(err=>{
-            dispatch(fetchTasksFailed(err.message));
-        })
-    };
+export function filterTasks(searchTerm){
+    return {type:'FILTER_TASKS',payload:{searchTerm}};
 }
+
+export function fetchTasks(){
+    return {type: 'FETCH_TASKS_STARTED'}
+}
+// export function fetchTasks(){
+//     return dispatch =>{
+//         dispatch(fetchTasksStarted());
+
+//         // api.fetchTasks().then(res=>{
+//         //     dispatch(fetchTasksSucceeded(res.data));
+//         // });
+
+//         api.fetchTasks().then(res=>{
+//             setTimeout(()=>{
+//                 dispatch(fetchTasksSucceeded(res.data));
+//             },2000);
+//             // throw new Error('Oh noes! Unable to fetch tasks!');
+//         // });
+//         }).catch(err=>{
+//             dispatch(fetchTasksFailed(err.messnoage));
+//         })
+//     };
+// }
 
 export function createTaskSucceeded(task){
     return {
@@ -90,16 +97,32 @@ export function editTaskSucceeded(task){
     }
 }
 
+function progressTimerStart(taskId){
+    return {type:'TIMER_STARTED',payload:{taskId}};
+}
 
+function progressTimerStop(taskId){
+    return {type:'TIMER_STOPPED',payload:{taskId}};
+}
 export function editTask(id,params={}){
     
     return (dispatch,getState) =>{
         // console.log(getState().tasks)
         const task = getTaskById(getState().tasks.tasks,id);
-        const updatedTask = Object.assign({},task,params);
+        // const updatedTask = Object.assign({},task,params); // OLD ONE
+        const updatedTask = {
+            ...task,
+            ...params,
+        } // NEW ONE
 
         api.editTask(id,updatedTask).then(res=>{
             dispatch(editTaskSucceeded(res.data));
+            if (res.data.status ==='In Progress') {
+                dispatch(progressTimerStart(res.data.id));
+            }
+            if (task.status==='In Progress'){
+                dispatch(progressTimerStop(res.data.id));
+            }
         }).catch(error=>{
             dispatch(fetchTasksFailed(error.message));
         });
@@ -110,11 +133,11 @@ function getTaskById(tasks, id) {
   return tasks.find(task => task.id === id);
 }
 
-function fetchTasksStarted(){
-    return {
-        type:'FETCH_TASKS_STARTED',
-    };
-}
+// function fetchTasksStarted(){
+//     return {
+//         type:'FETCH_TASKS_STARTED',
+//     };
+// }
 
 function fetchTasksFailed(error){
     return {

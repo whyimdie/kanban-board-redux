@@ -1,3 +1,7 @@
+import {createSelector} from 'reselect';
+import { TASK_STATUSES } from '../constants';
+
+
 // import {uniqueId} from '../actions';
 
 // const mockTasks = [
@@ -49,6 +53,8 @@
 const initialState = {
   tasks: [],
   isLoading: false,
+  error: null,
+  searchTerm: ''
 }
 
 // Convert the above function into switch condition
@@ -68,6 +74,12 @@ export default function tasks(state=initialState,action){
     //     }),
     //   };
     // }
+    case 'FILTER_TASKS':{
+      return{
+        ...state,
+        searchTerm: action.payload.searchTerm
+      }
+    }
     case 'FETCH_TASKS_STARTED': {
       return {
         ...state,
@@ -107,8 +119,44 @@ export default function tasks(state=initialState,action){
         error: action.payload.error,
       };
     }
+    case 'TIMER_INCREMENT': {
+      const nextTasks = state.tasks.map(task=>{
+        if (task.id === action.payload.taskId) {
+          return {...task, timer: task.timer + 1};
+        }
+        return task;
+      });
+      return {...state,tasks:nextTasks}
+    }
     default: {
       return state;
     }
   }
 }
+
+// export function getFilteredTasks(tasks,searchTerm){
+//   return tasks.filter(task=>{
+//     return task.title.match(new RegExp(searchTerm,'i'));
+//   });
+// }
+
+const getTasks = state => state.tasks.tasks;
+const getSearchTerm = state => state.tasks.searchTerm;
+
+export const getFilteredTasks = createSelector(
+  [getTasks,getSearchTerm],
+  (tasks,searchTerm) => {
+    return tasks.filter(task=> task.title.match(new RegExp(searchTerm,'i')));
+  },
+);
+
+export const getGroupedAndFilteredTasks = createSelector(
+  [getFilteredTasks],
+  tasks=>{
+    const grouped = {};
+    TASK_STATUSES.forEach(status=>{
+      grouped[status] = tasks.filter(task=>task.status===status);
+    });
+    return grouped;
+  },
+);

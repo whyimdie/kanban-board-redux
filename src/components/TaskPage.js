@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import TaskList from './TaskList';
 
-import { TASK_STATUSES } from '../constants';
+// import { TASK_STATUSES } from '../constants';
 
 class TasksPage extends Component {
   constructor(props) {
@@ -38,6 +38,11 @@ class TasksPage extends Component {
     this.resetForm();
   };
 
+  onSearch = e => {
+    // console.log('search term',e.target.value);
+    this.props.onSearch(e.target.value);
+  }
+
   toggleForm = () => {
     this.setState({ showNewCardForm: !this.state.showNewCardForm });
   };
@@ -45,17 +50,35 @@ class TasksPage extends Component {
   renderTaskLists() {
     const { onStatusChange, tasks } = this.props;
 
-    return TASK_STATUSES.map(status => {
-      const statusTasks = tasks.filter(task => task.status === status);
+    // const filteredTasks = tasks.filter(task=>{
+    //   return task.title.match(new RegExp(this.state.searchTerm,'i'));
+    // })
+    console.log(Object.keys(tasks))
+    return Object.keys(tasks).map(status => {
+      console.log(tasks[status])
+      const tasksByStatus = tasks[status];
       return (
         <TaskList
           key={status}
           status={status}
-          tasks={statusTasks}
+          tasks={tasksByStatus}
           onStatusChange={onStatusChange}
         />
       );
     });
+
+    // return TASK_STATUSES.map(status => {
+    //   // const statusTasks = tasks.filter(task => task.status === status);
+    //   const statusTasks = filteredTasks.filter(task => task.status === status);
+    //   return (
+    //     <TaskList
+    //       key={status}
+    //       status={status}
+    //       tasks={statusTasks}
+    //       onStatusChange={onStatusChange}
+    //     />
+    //   );
+    // });
   }
 
   render() {
@@ -69,6 +92,11 @@ class TasksPage extends Component {
     return (
       <div className="tasks">
         <div className="tasks-header">
+          <input
+            onChange={this.onSearch}
+            type="text"
+            placeholder="Search..."
+          />
           <button className="button button-default" onClick={this.toggleForm}>
             + New task
           </button>
